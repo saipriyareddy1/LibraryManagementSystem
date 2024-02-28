@@ -1,17 +1,18 @@
 package com.spring.demo.library.model;
+
 public class Member {
 
-    private long memberId;
+    private Integer memberId;
     private String firstName;
     private String lastName;
     private String emailAddress;
     private String phoneNumber;
 
-    public long getMemberId() {
+    public Integer getMemberId() {
         return memberId;
     }
 
-    public void setMemberId(long memberId) {
+    public void setMemberId(Integer memberId) {
         this.memberId = memberId;
     }
 

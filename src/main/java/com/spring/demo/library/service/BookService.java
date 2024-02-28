@@ -1,47 +1,37 @@
 package com.spring.demo.library.service;
 
-import com.spring.demo.library.model.Book;
+import com.spring.demo.library.entity.LibraryBook;
+import com.spring.demo.library.repository.BookRepository;
+import jakarta.persistence.PersistenceContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @Service
 public class BookService {
+    @Autowired
+    private BookRepository bookRepository;
 
-    private Map<Long, Book> bookMap = new HashMap<>();
-
-    public Book createBook(Book book) {
-        // Simulating database insert
-        Long bookId = new Random().nextLong();
+    public LibraryBook createBook(LibraryBook book) {
+        // Generate a random bookId (you might want to use a different strategy)
+        Integer bookId = new Random().nextInt();
         book.setBookId(bookId);
-        bookMap.put(bookId, book);
-        return book;
+        return bookRepository.save(book);
     }
-
-    public Book getBook(Long bookId) {
-        return bookMap.get(bookId);
+    public LibraryBook getBook(Integer bookId) {
+        Optional<LibraryBook> bookOptional = bookRepository.findById(bookId);
+        return bookOptional.orElse(new LibraryBook());
     }
+    public LibraryBook updateBook(Integer bookId,LibraryBook book){
 
-    public List<Book> getAllBooks() {
-        return bookMap.values().stream().collect(Collectors.toList());
+        // call the database
+        book.setBookId(bookId);
+        return bookRepository.save(book);
     }
-
-    public Book updateBook(Long bookId, Book updatedBook) {
-        if (bookMap.containsKey(bookId)) {
-            // Simulating database update
-            updatedBook.setBookId(bookId);
-            bookMap.put(bookId, updatedBook);
-            return updatedBook;
-        }
-        return null; // Book not found for the given bookId
-    }
-
-    public void deleteBook(Long bookId) {
-        bookMap.remove(bookId);
-        // Simulating database delete
+    public void deleteBook(Integer bookId) {
+        // Delete a member by ID using Spring Data JDBC repository
+        bookRepository.deleteById(bookId);
+        // Alternatively, you can perform additional logic after deletion if needed
     }
 }
